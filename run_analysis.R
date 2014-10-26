@@ -13,10 +13,13 @@ fetchData <- function(src, dst) {
 }
 
 # Returns headers list.
+loadFeatures <- function() {
+    read.table("UCI HAR Dataset/features.txt",
+               header = FALSE,
+               colClasses = "character")
+}
 buildHeaders <- function() {
-    features <- read.table("UCI HAR Dataset/features.txt",
-                           header = FALSE,
-                           colClasses = "character")
+    features <- loadFeatures()
     list(features$V2,
          c("Activity"),
          c("Subject"),
@@ -73,9 +76,7 @@ y.training <- data.frame(factorActivities(y.training))
 y.test <- data.frame(factorActivities(y.test))
 
 # Resets colnames
-features <- read.table("UCI HAR Dataset/features.txt",
-                       header = FALSE,
-                       colClasses = "character")
+features <- loadFeatures()
 colnames(x.training) <- features$V2
 colnames(x.test) <- features$V2
 colnames(y.training) <- c("Activity")
@@ -86,5 +87,4 @@ all.training <- cbind(cbind(x.training, y.training), s.training)
 all.test <- cbind(cbind(x.test, y.test), s.test)
 all.data <- rbind(all.training,
                   all.test)
-
 
