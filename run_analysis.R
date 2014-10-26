@@ -70,6 +70,21 @@ s.test <- data.frame(loaded.files[6])
 
 # Factors activities.
 y.training <- data.frame(factorActivities(y.training))
-colnames(y.training) <- c("Activity")
 y.test <- data.frame(factorActivities(y.test))
+
+# Resets colnames
+features <- read.table("UCI HAR Dataset/features.txt",
+                       header = FALSE,
+                       colClasses = "character")
+colnames(x.training) <- features$V2
+colnames(x.test) <- features$V2
+colnames(y.training) <- c("Activity")
 colnames(y.test) <- c("Activity")
+
+# Merges training and test data.
+all.training <- cbind(cbind(x.training, y.training), s.training)
+all.test <- cbind(cbind(x.test, y.test), s.test)
+all.data <- rbind(all.training,
+                  all.test)
+
+
