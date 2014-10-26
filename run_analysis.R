@@ -36,6 +36,15 @@ loadAll <- function(files, headers.list) {
     mapply(load, files, headers.list)
 }
 
+factorActivities <- function(df) {
+    activities <- read.table("UCI HAR Dataset/activity_labels.txt",
+                             header = FALSE,
+                             colClasses = "character")
+    factor(df$Activity,
+           levels = activities$V1,
+           labels = activities$V2)
+} 
+
 # Downloads file if required.
 src <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 data.path <- "UCI HAR Dataset"
@@ -50,3 +59,17 @@ all.files <- c("UCI HAR Dataset/train/X_train.txt",
                "UCI HAR Dataset/test/subject_test.txt")
 all.headers <- buildHeaders()
 loaded.files <- loadAll(all.files, all.headers)
+
+# Extracts data frames from loaded files.
+x.training <- data.frame(loaded.files[1])
+y.training <- data.frame(loaded.files[2])
+s.training <- data.frame(loaded.files[3])
+x.test <- data.frame(loaded.files[4])
+y.test <- data.frame(loaded.files[5])
+s.test <- data.frame(loaded.files[6])
+
+# Factors activities.
+y.training <- data.frame(factorActivities(y.training))
+colnames(y.training) <- c("Activity")
+y.test <- data.frame(factorActivities(y.test))
+colnames(y.test) <- c("Activity")
